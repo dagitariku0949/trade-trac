@@ -207,6 +207,32 @@ body {
     line-height: 1.6;
 }
 
+.learning-section-landing {
+    margin-top: 80px;
+    padding-top: 60px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.learning-section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, #00d4ff, #5a67d8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+}
+
+.learning-section-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #a0aec0;
+    margin-bottom: 50px;
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
 .landing-footer {
     text-align: center;
     padding: 40px 20px;
@@ -722,6 +748,7 @@ input[type="range"] {
     background: rgba(255, 255, 255, 0.1);
     outline: none;
     -webkit-appearance: none;
+    appearance: none;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -792,8 +819,154 @@ input[type="range"]::-moz-range-thumb {
     font-weight: 600;
 }
 
-/* Monthly Calendar */
-.monthly-section {
+/* Learning Card Special Styling */
+.learning-card {
+    background: linear-gradient(135deg, rgba(90, 103, 216, 0.15), rgba(0, 212, 255, 0.15));
+    border: 2px solid rgba(90, 103, 216, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.learning-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}
+
+.card-badge {
+    margin-top: 15px;
+    display: inline-block;
+    padding: 5px 15px;
+    background: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Learning Center */
+.learning-center {
+    min-height: 100vh;
+    padding: 40px 20px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.learning-header {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto 60px;
+    position: relative;
+}
+
+.btn-back {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-5px);
+}
+
+.learning-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.learning-subtitle {
+    font-size: 1.2rem;
+    color: #a0aec0;
+}
+
+.learning-center-section {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(90, 103, 216, 0.3);
+    border-radius: 16px;
+    padding: 40px 25px;
+    margin-bottom: 30px;
+}
+
+.learning-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.learning-resource-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+}
+
+.learning-resource-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(90, 103, 216, 0.5);
+    box-shadow: 0 10px 30px rgba(90, 103, 216, 0.3);
+}
+
+.resource-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.resource-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.resource-description {
+    color: #a0aec0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.resource-link {
+    color: #00d4ff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.monthly-calendar-section {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1015,5 +1188,175 @@ input[type="range"]::-moz-range-thumb {
     .trades-table th,
     .trades-table td {
         padding: 8px 6px;
+    }
+}
+
+.calendar-day:hover:not(.empty) {
+    box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+}
+
+.day-number {
+    font-size: 0.9rem;
+    color: #a0aec0;
+    margin-bottom: 5px;
+}
+
+.day-pnl {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.day-pnl.profit {
+    color: #48bb78;
+}
+
+.day-pnl.loss {
+    color: #f56565;
+}
+
+.day-trades {
+    font-size: 0.7rem;
+    color: #a0aec0;
+}
+
+/* Learning Section on Landing Page */
+.learning-section-landing {
+    margin-top: 80px;
+    padding-top: 60px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.learning-section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, #00d4ff, #5a67d8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+}
+
+.learning-section-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #a0aec0;
+    margin-bottom: 50px;
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.learning-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.learning-resource-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+}
+
+.learning-resource-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(90, 103, 216, 0.5);
+    box-shadow: 0 10px 30px rgba(90, 103, 216, 0.3);
+}
+
+.resource-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.resource-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.resource-description {
+    color: #a0aec0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.resource-link {
+    color: #00d4ff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Learning Card Special Styling */
+.learning-card {
+    background: linear-gradient(135deg, rgba(90, 103, 216, 0.15), rgba(0, 212, 255, 0.15));
+    border: 2px solid rgba(90, 103, 216, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.learning-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}
+
+.card-badge {
+    margin-top: 15px;
+    display: inline-block;
+    padding: 5px 15px;
+    background: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.landing-footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #a0aec0;
+    font-size: 1rem;
+    animation: fadeIn 1s ease-in 0.8s both;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .learning-section-title {
+        font-size: 2rem;
+    }
+    
+    .learning-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 }
