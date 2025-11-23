@@ -4,7 +4,7 @@ class ApiClient {
         // Use environment variable or default to localhost
         this.baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://localhost:5000/api'
-            : 'https://your-app-name.onrender.com/api'; // Update this after deployment
+            : 'https://trade-trac.onrender.com/api';
     }
 
     async request(endpoint, options = {}) {

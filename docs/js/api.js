@@ -1,7 +1,10 @@
 // API Client for Trading Dashboard
 class ApiClient {
     constructor() {
-        this.baseURL = 'http://localhost:5000/api';
+        // Use environment variable or default to localhost
+        this.baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000/api'
+            : 'https://trade-trac.onrender.com/api';
     }
 
     async request(endpoint, options = {}) {
