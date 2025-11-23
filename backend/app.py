@@ -30,6 +30,19 @@ def calculate_confluence(weekly, daily, h4, h1, lower):
     return round((weekly + daily + h4 + h1 + lower) / 5, 1)
 
 # Routes
+@app.route('/')
+def home():
+    return jsonify({
+        'message': 'Trading Dashboard API',
+        'status': 'running',
+        'endpoints': {
+            'trades': '/api/trades',
+            'account_stats': '/api/trades/stats/account',
+            'metrics': '/api/trades/stats/metrics',
+            'daily_stats': '/api/trades/stats/daily'
+        }
+    })
+
 @app.route('/api/trades', methods=['GET'])
 def get_trades():
     db = next(get_db())
