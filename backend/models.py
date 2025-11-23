@@ -6,6 +6,34 @@ import os
 
 Base = declarative_base()
 
+class Video(Base):
+    __tablename__ = 'videos'
+    
+    id = Column(Integer, primary_key=True)
+    title = Column(String(200), nullable=False)
+    description = Column(String(1000), nullable=True)
+    video_url = Column(String(500), nullable=False)  # YouTube/Vimeo URL
+    thumbnail_url = Column(String(500), nullable=True)
+    category = Column(String(50), nullable=True)  # e.g., "Tutorial", "Analysis", "Strategy"
+    duration = Column(String(20), nullable=True)  # e.g., "15:30"
+    is_featured = Column(Boolean, default=False)
+    view_count = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'video_url': self.video_url,
+            'thumbnail_url': self.thumbnail_url,
+            'category': self.category,
+            'duration': self.duration,
+            'is_featured': self.is_featured,
+            'view_count': self.view_count,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
 class Trade(Base):
     __tablename__ = 'trades'
     

@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import Trade, create_tables, get_db
+from models import Trade, Video, create_tables, get_db
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -306,6 +306,107 @@ def get_monthly_stats():
             for date_str, pnl in sorted(daily_pnl.items())
         ]
     })
+
+# ============= VIDEO MANAGEMENT ROUTES =============
+
+@app.route('/api/videos', methods=['GET'])
+def get_videos():
+    """Get all videos"""
+    db = next(get_db())
+    category = request.args.get('category')
+    featured = request.args.get('featured')
+    
+    query = db.query(Video)
+    
+    if category:
+        query = query.filter(Video.category == category)
+    if featured == 'true':
+        query = query.filter(Video.is_featured == True)
+    
+    videos = query.order_by(Video.created_at.desc()).all()
+    return jsonify([video.to_dict() for video in videos])
+
+@app.route('/api/videos/<int:video_id>', methods=['GET'])
+def get_video(video_id):
+    """Get a single video by ID"""
+    db = next(get_db())
+    video = db.query(Video).filter(Video.id == video_id).first()
+    
+    if not video:
+        return jsonify({'error': 'Video not found'}), 404
+    
+    # Increment view count
+    video.view_count += 1
+    db.commit()
+    
+    return jsonify(video.to_dict())
+
+@app.route('/api/videos', methods=['POST'])
+def create_video():
+    """Create a new video entry"""
+    db = next(get_db())
+    data = request.json
+    
+    video = Video(
+        title=data['title'],
+        description=data.get('description'),
+        video_url=data['video_url'],
+        thumbnail_url=data.get('thumbnail_url'),
+        category=data.get('category'),
+        duration=data.get('duration'),
+        is_featured=data.get('is_featured', False)
+    )
+    
+    db.add(video)
+    db.commit()
+    db.refresh(video)
+    
+    return jsonify(video.to_dict()), 201
+
+@app.route('/api/videos/<int:video_id>', methods=['PUT'])
+def update_video(video_id):
+    """Update a video"""
+    db = next(get_db())
+    video = db.query(Video).filter(Video.id == video_id).first()
+    
+    if not video:
+        return jsonify({'error': 'Video not found'}), 404
+    
+    data = request.json
+    
+    if 'title' in data:
+        video.title = data['title']
+    if 'description' in data:
+        video.description = data['description']
+    if 'video_url' in data:
+        video.video_url = data['video_url']
+    if 'thumbnail_url' in data:
+        video.thumbnail_url = data['thumbnail_url']
+    if 'category' in data:
+        video.category = data['category']
+    if 'duration' in data:
+        video.duration = data['duration']
+    if 'is_featured' in data:
+        video.is_featured = data['is_featured']
+    
+    db.commit()
+    db.refresh(video)
+    
+    return jsonify(video.to_dict())
+
+@app.route('/api/videos/<int:video_id>', methods=['DELETE'])
+def delete_video(video_id):
+    """Delete a video"""
+    db = next(get_db())
+    video = db.query(Video).filter(Video.id == video_id).first()
+    
+    if not video:
+        return jsonify({'error': 'Video not found'}), 404
+    
+    db.delete(video)
+    db.commit()
+    
+    return jsonify({'message': 'Video deleted successfully'})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
