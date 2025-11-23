@@ -247,6 +247,66 @@ def get_daily_stats():
         for date, pnl in sorted(daily_pnl.items())
     ])
 
+@app.route('/api/trades/stats/monthly', methods=['GET'])
+def get_monthly_stats():
+    db = next(get_db())
+    year = request.args.get('year', datetime.utcnow().year, type=int)
+    month = request.args.get('month', datetime.utcnow().month, type=int)
+    
+    # Get trades for the specified month
+    from datetime import date
+    start_date = date(year, month, 1)
+    if month == 12:
+        end_date = date(year + 1, 1, 1)
+    else:
+        end_date = date(year, month + 1, 1)
+    
+    closed_trades = db.query(Trade).filter(
+        Trade.status == 'CLOSED',
+        Trade.closed_at >= start_date,
+        Trade.closed_at < end_date
+    ).all()
+    
+    # Calculate daily P&L
+    daily_pnl = {}
+    daily_trades = {}
+    for trade in closed_trades:
+        if trade.closed_at:
+            date_str = trade.closed_at.strftime('%Y-%m-%d')
+            daily_pnl[date_str] = daily_pnl.get(date_str, 0) + trade.pnl
+            daily_trades[date_str] = daily_trades.get(date_str, 0) + 1
+    
+    # Calculate monthly stats
+    total_pnl = sum(daily_pnl.values())
+    winning_days = len([pnl for pnl in daily_pnl.values() if pnl > 0])
+    losing_days = len([pnl for pnl in daily_pnl.values() if pnl < 0])
+    total_days = len(daily_pnl)
+    
+    best_day = max(daily_pnl.items(), key=lambda x: x[1]) if daily_pnl else (None, 0)
+    worst_day = min(daily_pnl.items(), key=lambda x: x[1]) if daily_pnl else (None, 0)
+    
+    return jsonify({
+        'year': year,
+        'month': month,
+        'total_pnl': round(total_pnl, 2),
+        'total_trades': len(closed_trades),
+        'trading_days': total_days,
+        'winning_days': winning_days,
+        'losing_days': losing_days,
+        'win_rate': round((winning_days / total_days * 100) if total_days > 0 else 0, 1),
+        'best_day': {'date': best_day[0], 'pnl': round(best_day[1], 2)},
+        'worst_day': {'date': worst_day[0], 'pnl': round(worst_day[1], 2)},
+        'average_daily_pnl': round(total_pnl / total_days, 2) if total_days > 0 else 0,
+        'daily_data': [
+            {
+                'date': date_str,
+                'pnl': round(pnl, 2),
+                'trades': daily_trades.get(date_str, 0)
+            }
+            for date_str, pnl in sorted(daily_pnl.items())
+        ]
+    })
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)

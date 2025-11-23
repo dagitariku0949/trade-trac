@@ -84,6 +84,10 @@ class ApiClient {
     async getDailyStats() {
         return this.request('/trades/stats/daily');
     }
+
+    async getMonthlyStats(year, month) {
+        return this.request(`/trades/stats/monthly?year=${year}&month=${month}`);
+    }
 }
 
 // Create global API client instance
