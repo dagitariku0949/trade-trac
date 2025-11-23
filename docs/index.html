@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🚀 Trading Dashboard</h1>
+            <p>Trade with Discipline</p>
+        </header>
+
+        <!-- Account Summary -->
+        <section class="account-summary">
+            <div class="summary-card">
+                <h3>Account Balance</h3>
+                <div class="balance" id="currentBalance">$100,000.00</div>
+                <div class="pnl" id="totalPnl">+$0.00 (0.00%)</div>
+            </div>
+            <div class="summary-card">
+                <h3>Total Trades</h3>
+                <div class="trades-count" id="totalTrades">0</div>
+                <div class="win-loss" id="winLoss">0W / 0L</div>
+            </div>
+            <div class="summary-card">
+                <h3>Open Positions</h3>
+                <div class="open-trades" id="openTrades">0</div>
+            </div>
+        </section>
+
+        <!-- Confluence Card -->
+        <section class="confluence-section">
+            <div class="confluence-card">
+                <h3>Overall Confluence</h3>
+                <div class="confluence-score" id="overallConfluence">0%</div>
+                <div class="confluence-level" id="confluenceLevel">No Data</div>
+            </div>
+        </section>
+
+        <!-- Metrics Grid -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <h4>Profit Factor</h4>
+                <div class="metric-value" id="profitFactor">0.00</div>
+            </div>
+            <div class="metric-card">
+                <h4>Win Rate</h4>
+                <div class="metric-value" id="winRate">0.0%</div>
+            </div>
+            <div class="metric-card">
+                <h4>Average Win</h4>
+                <div class="metric-value" id="averageWin">$0.00</div>
+            </div>
+            <div class="metric-card">
+                <h4>Average Loss</h4>
+                <div class="metric-value" id="averageLoss">$0.00</div>
+            </div>
+            <div class="metric-card">
+                <h4>Largest Win</h4>
+                <div class="metric-value" id="largestWin">$0.00</div>
+            </div>
+            <div class="metric-card">
+                <h4>Largest Loss</h4>
+                <div class="metric-value" id="largestLoss">$0.00</div>
+            </div>
+        </section>
+
+        <!-- Chart Section -->
+        <section class="chart-section">
+            <h3>Daily P&L</h3>
+            <canvas id="dailyPnlChart"></canvas>
+        </section>
+
+        <!-- Trade Management -->
+        <section class="trade-management">
+            <div class="trade-header">
+                <h3>Trades</h3>
+                <div class="trade-controls">
+                    <select id="statusFilter">
+                        <option value="all">All Trades</option>
+                        <option value="open">Open</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                    <button class="btn btn-primary" id="newTradeBtn">+ New Trade</button>
+                </div>
+            </div>
+            <div class="trades-table-container">
+                <table class="trades-table" id="tradesTable">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Direction</th>
+                            <th>Entry</th>
+                            <th>Exit</th>
+                            <th>Lot Size</th>
+                            <th>Confluence</th>
+                            <th>P&L</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tradesTableBody">
+                        <!-- Trades will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Trade Modal -->
+    <div class="modal" id="tradeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">New Trade</h3>
+                <span class="close" id="closeModal">&times;</span>
+            </div>
+            <form id="tradeForm">
+                <div class="form-group">
+                    <label for="symbol">Symbol</label>
+                    <input type="text" id="symbol" name="symbol" placeholder="EURUSD" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="direction">Direction</label>
+                    <select id="direction" name="direction" required>
+                        <option value="">Select Direction</option>
+                        <option value="LONG">LONG</option>
+                        <option value="SHORT">SHORT</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="entryPrice">Entry Price</label>
+                        <input type="number" id="entryPrice" name="entry_price" step="0.00001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exitPrice">Exit Price (Optional)</label>
+                        <input type="number" id="exitPrice" name="exit_price" step="0.00001">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lotSize">Lot Size</label>
+                    <input type="number" id="lotSize" name="lot_size" step="0.01" required>
+                </div>
+                
+                <div class="confluence-section">
+                    <h4>Confluence Analysis</h4>
+                    <div class="confluence-sliders">
+                        <div class="slider-group">
+                            <label for="weeklyTf">Weekly TF: <span id="weeklyValue">0</span>%</label>
+                            <input type="range" id="weeklyTf" name="weekly_tf" min="0" max="100" value="0">
+                        </div>
+                        <div class="slider-group">
+                            <label for="dailyTf">Daily TF: <span id="dailyValue">0</span>%</label>
+                            <input type="range" id="dailyTf" name="daily_tf" min="0" max="100" value="0">
+                        </div>
+                        <div class="slider-group">
+                            <label for="h4Tf">4H TF: <span id="h4Value">0</span>%</label>
+                            <input type="range" id="h4Tf" name="h4_tf" min="0" max="100" value="0">
+                        </div>
+                        <div class="slider-group">
+                            <label for="h1Tf">1H TF: <span id="h1Value">0</span>%</label>
+                            <input type="range" id="h1Tf" name="h1_tf" min="0" max="100" value="0">
+                        </div>
+                        <div class="slider-group">
+                            <label for="lowerTf">Lower TF: <span id="lowerValue">0</span>%</label>
+                            <input type="range" id="lowerTf" name="lower_tf" min="0" max="100" value="0">
+                        </div>
+                    </div>
+                    <div class="total-confluence">
+                        Total Confluence: <span id="totalConfluence">0%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="riskReward">Risk:Reward Ratio (Optional)</label>
+                    <input type="number" id="riskReward" name="risk_reward" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Trade analysis, setup notes..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Create Trade</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Close Trade Modal -->
+    <div class="modal" id="closeTradeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Close Trade</h3>
+                <span class="close" id="closeCloseModal">&times;</span>
+            </div>
+            <form id="closeTradeForm">
+                <div class="form-group">
+                    <label for="closeExitPrice">Exit Price</label>
+                    <input type="number" id="closeExitPrice" step="0.00001" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelCloseBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Close Trade</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/components/tradeForm.js"></script>
+    <script src="js/components/tradesTable.js"></script>
+    <script src="js/components/dashboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>""
