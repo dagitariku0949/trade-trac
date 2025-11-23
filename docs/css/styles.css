@@ -14,6 +14,207 @@ body {
     overflow-x: hidden;
 }
 
+/* Landing Page */
+.landing-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 20px;
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.landing-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.hero-section {
+    text-align: center;
+    padding: 60px 20px;
+    margin-bottom: 60px;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    animation: slideDown 0.8s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.gradient-text {
+    background: linear-gradient(45deg, #00d4ff, #5a67d8, #00d4ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% center;
+    }
+    50% {
+        background-position: 100% center;
+    }
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: #a0aec0;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    line-height: 1.8;
+    animation: slideUp 0.8s ease-out 0.2s both;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-hero {
+    padding: 18px 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: linear-gradient(45deg, #00d4ff, #5a67d8);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+    animation: slideUp 0.8s ease-out 0.4s both;
+}
+
+.btn-hero:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.5);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 35px;
+    text-align: center;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+.feature-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.feature-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.feature-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.feature-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(0, 212, 255, 0.5);
+    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+}
+
+.feature-icon {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.feature-card:hover .feature-icon {
+    animation: none;
+    transform: scale(1.2) rotate(5deg);
+    transition: transform 0.3s ease;
+}
+
+.feature-card h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    color: #a0aec0;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.landing-footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #a0aec0;
+    font-size: 1rem;
+    animation: fadeIn 1s ease-in 0.8s both;
+}
+
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -658,6 +859,28 @@ input[type="range"]::-moz-range-thumb {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .btn-hero {
+        padding: 15px 40px;
+        font-size: 1rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .feature-card {
+        padding: 25px;
+    }
+    
     .container {
         padding: 15px;
     }

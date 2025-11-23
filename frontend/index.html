@@ -8,7 +8,54 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
+    <!-- Landing Page -->
+    <div id="landingPage" class="landing-page">
+        <div class="landing-content">
+            <div class="hero-section">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Trade with Discipline</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Professional trading journal with advanced analytics, monthly tracking, and real-time performance metrics
+                </p>
+                <button class="btn-hero" id="enterDashboard">
+                    Enter Dashboard →
+                </button>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card" data-feature="analytics">
+                    <div class="feature-icon">📊</div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Track profit factor, win rate, and performance metrics in real-time</p>
+                </div>
+                
+                <div class="feature-card" data-feature="confluence">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Confluence Tracking</h3>
+                    <p>Analyze trade quality across 5 timeframes for better decision making</p>
+                </div>
+                
+                <div class="feature-card" data-feature="calendar">
+                    <div class="feature-icon">📅</div>
+                    <h3>Monthly Calendar</h3>
+                    <p>Visual heatmap of daily performance with detailed monthly statistics</p>
+                </div>
+                
+                <div class="feature-card" data-feature="trades">
+                    <div class="feature-icon">💰</div>
+                    <h3>Trade Management</h3>
+                    <p>Add, edit, close, and track all your trades with automatic P&L calculation</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="landing-footer">
+            <p>Built for serious traders who value discipline and data-driven insights</p>
+        </div>
+    </div>
+
+    <div class="container" id="mainDashboard" style="display: none;">
         <!-- Header -->
         <header class="header">
             <h1>🚀 Trading Dashboard</h1>

@@ -5,6 +5,38 @@ let currentYear = new Date().getFullYear();
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Trading Dashboard Loaded');
     
+    // Handle landing page
+    const enterBtn = document.getElementById('enterDashboard');
+    const landingPage = document.getElementById('landingPage');
+    const mainDashboard = document.getElementById('mainDashboard');
+    
+    if (enterBtn && landingPage && mainDashboard) {
+        enterBtn.addEventListener('click', () => {
+            landingPage.style.animation = 'fadeOut 0.5s ease-out';
+            setTimeout(() => {
+                landingPage.style.display = 'none';
+                mainDashboard.style.display = 'block';
+                mainDashboard.style.animation = 'fadeIn 0.5s ease-in';
+                initializeDashboard();
+            }, 500);
+        });
+        
+        // Feature cards click to enter
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', () => {
+                enterBtn.click();
+            });
+        });
+    } else {
+        // If no landing page, show dashboard directly
+        if (mainDashboard) {
+            mainDashboard.style.display = 'block';
+            initializeDashboard();
+        }
+    }
+});
+
+async function initializeDashboard() {
     // Initialize dashboard
     await loadDashboard();
     
@@ -16,7 +48,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Load monthly data
     await loadMonthlyData();
-});
+}
+
+// Add fadeOut animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
 
 async function loadDashboard() {
     try {
