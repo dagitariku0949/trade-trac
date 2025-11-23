@@ -9,8 +9,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const enterBtn = document.getElementById('enterDashboard');
     const landingPage = document.getElementById('landingPage');
     const mainDashboard = document.getElementById('mainDashboard');
+    const leapBtn = document.getElementById('leapBtn');
     
     if (enterBtn && landingPage && mainDashboard) {
+        // Enter dashboard from landing page
         enterBtn.addEventListener('click', () => {
             landingPage.style.animation = 'fadeOut 0.5s ease-out';
             setTimeout(() => {
@@ -27,6 +29,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 enterBtn.click();
             });
         });
+        
+        // LEAP button - return to landing page
+        if (leapBtn) {
+            leapBtn.addEventListener('click', () => {
+                mainDashboard.style.animation = 'fadeOut 0.5s ease-out';
+                setTimeout(() => {
+                    mainDashboard.style.display = 'none';
+                    landingPage.style.display = 'flex';
+                    landingPage.style.animation = 'fadeIn 0.5s ease-in';
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 500);
+            });
+        }
     } else {
         // If no landing page, show dashboard directly
         if (mainDashboard) {

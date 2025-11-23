@@ -224,9 +224,20 @@ body {
 
 /* Header */
 .header {
-    text-align: center;
     margin-bottom: 30px;
     padding: 20px 0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.header-text {
+    text-align: left;
 }
 
 .header h1 {
@@ -243,6 +254,63 @@ body {
     font-size: 1.2rem;
     color: #a0aec0;
     font-weight: 300;
+}
+
+.btn-leap {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, #5a67d8, #00d4ff);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(90, 103, 216, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 2px;
+}
+
+.btn-leap:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(90, 103, 216, 0.6);
+    background: linear-gradient(45deg, #00d4ff, #5a67d8);
+}
+
+.btn-leap:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+.leap-icon {
+    font-size: 1.3rem;
+    animation: rocketFloat 2s ease-in-out infinite;
+}
+
+@keyframes rocketFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-5px) rotate(-10deg);
+    }
+}
+
+.btn-leap:hover .leap-icon {
+    animation: rocketLaunch 0.6s ease-out;
+}
+
+@keyframes rocketLaunch {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(-20deg) scale(1.2);
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
 }
 
 /* Account Summary */
@@ -887,6 +955,21 @@ input[type="range"]::-moz-range-thumb {
     
     .header h1 {
         font-size: 2rem;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .header-text {
+        text-align: center;
+        width: 100%;
+    }
+    
+    .btn-leap {
+        width: 100%;
+        justify-content: center;
     }
     
     .account-summary {
