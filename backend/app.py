@@ -1,15 +1,18 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 from models import Trade, Video, TradingAccount, TradingStrategy, TradeTag, TradeImage
 from database import db_config, get_db
 from api_routes import register_enhanced_routes
 from datetime import datetime
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
 
-app = Flask(__name__)
+# Configure Flask to serve frontend files
+frontend_dir = Path(__file__).parent.parent / 'frontend'
+app = Flask(__name__, static_folder=str(frontend_dir), static_url_path='')
 CORS(app)
 
 # Create database tables
@@ -17,6 +20,26 @@ db_config.create_tables()
 
 # Register enhanced API routes
 register_enhanced_routes(app)
+
+# Serve frontend files
+@app.route('/')
+def serve_index():
+    """Serve main dashboard"""
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/admin.html')
+def serve_admin():
+    """Serve admin panel"""
+    return send_from_directory(app.static_folder, 'admin.html')
+
+@app.route('/<path:path>')
+def serve_static_files(path):
+    """Serve static files (CSS, JS, etc.)"""
+    try:
+        return send_from_directory(app.static_folder, path)
+    except:
+        # If file not found, serve index.html (for SPA routing)
+        return send_from_directory(app.static_folder, 'index.html')
 
 def calculate_pnl(trade):
     """Calculate P&L for a trade"""
