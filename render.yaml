@@ -1,9 +1,22 @@
 services:
   - type: web
-    name: trading-dashboard-api
+    name: trading-dashboard-full
     env: python
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: cd backend && gunicorn --bind 0.0.0.0:$PORT app:app
+    buildCommand: |
+      pip install -r backend/requirements.txt
+      python setup_database.py
+    startCommand: cd backend && python app.py
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: FLASK_ENV
+        value: production
+      - key: DB_TYPE
+        value: sqlite
+      - key: PORT
+        value: 5000
+
+databases:
+  - name: trading-dashboard-db
+    databaseName: trading_dashboard
+    user: trader
