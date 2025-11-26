@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Dashboard - Admin Panel</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>🛠️ Admin Panel</h1>
+                    <p>Manage your trading dashboard</p>
+                </div>
+                <button class="btn btn-secondary" onclick="window.location.href='index.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </div>
+        </header>
+
+        <!-- Admin Navigation -->
+        <nav class="admin-nav">
+            <button class="nav-btn active" data-section="overview">
+                <i class="fas fa-tachometer-alt"></i> Overview
+            </button>
+            <button class="nav-btn" data-section="accounts">
+                <i class="fas fa-user-circle"></i> Accounts
+            </button>
+            <button class="nav-btn" data-section="strategies">
+                <i class="fas fa-chess"></i> Strategies
+            </button>
+            <button class="nav-btn" data-section="tags">
+                <i class="fas fa-tags"></i> Tags
+            </button>
+            <button class="nav-btn" data-section="database">
+                <i class="fas fa-database"></i> Database
+            </button>
+            <button class="nav-btn" data-section="deployment">
+                <i class="fas fa-rocket"></i> Deployment
+            </button>
+        </nav>
+
+        <!-- Overview Section -->
+        <section id="overview" class="admin-section active">
+            <h2>System Overview</h2>
+            
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Trades</h3>
+                        <div class="stat-value" id="totalTradesCount">Loading...</div>
+                    </div>
+                </div>
+                
+                <div class="admin-stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Trading Accounts</h3>
+                        <div class="stat-value" id="accountsCount">Loading...</div>
+                    </div>
+                </div>
+                
+                <div class="admin-stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chess"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Strategies</h3>
+                        <div class="stat-value" id="strategiesCount">Loading...</div>
+                    </div>
+                </div>
+                
+                <div class="admin-stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Database Status</h3>
+                        <div class="stat-value" id="dbStatus">Connected</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="backupDatabase()">
+                        <i class="fas fa-download"></i> Backup Database
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportTrades()">
+                        <i class="fas fa-file-export"></i> Export Trades
+                    </button>
+                    <button class="btn btn-success" onclick="syncToGitHub()">
+                        <i class="fab fa-github"></i> Sync to GitHub
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Accounts Management -->
+        <section id="accounts" class="admin-section">
+            <div class="section-header">
+                <h2>Trading Accounts</h2>
+                <button class="btn btn-primary" onclick="showAddAccountModal()">
+                    <i class="fas fa-plus"></i> Add Account
+                </button>
+            </div>
+            
+            <div class="accounts-list" id="accountsList">
+                <!-- Accounts will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Strategies Management -->
+        <section id="strategies" class="admin-section">
+            <div class="section-header">
+                <h2>Trading Strategies</h2>
+                <button class="btn btn-primary" onclick="showAddStrategyModal()">
+                    <i class="fas fa-plus"></i> Add Strategy
+                </button>
+            </div>
+            
+            <div class="strategies-list" id="strategiesList">
+                <!-- Strategies will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Tags Management -->
+        <section id="tags" class="admin-section">
+            <div class="section-header">
+                <h2>Trade Tags</h2>
+                <button class="btn btn-primary" onclick="showAddTagModal()">
+                    <i class="fas fa-plus"></i> Add Tag
+                </button>
+            </div>
+            
+            <div class="tags-list" id="tagsList">
+                <!-- Tags will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Database Management -->
+        <section id="database" class="admin-section">
+            <h2>Database Management</h2>
+            
+            <div class="db-actions">
+                <div class="action-card">
+                    <h3>Backup & Restore</h3>
+                    <p>Create backups and restore your trading data</p>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="createBackup()">
+                            <i class="fas fa-save"></i> Create Backup
+                        </button>
+                        <button class="btn btn-secondary" onclick="showRestoreModal()">
+                            <i class="fas fa-upload"></i> Restore Backup
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="action-card">
+                    <h3>Database Migration</h3>
+                    <p>Update database schema and apply migrations</p>
+                    <div class="action-buttons">
+                        <button class="btn btn-success" onclick="runMigrations()">
+                            <i class="fas fa-cogs"></i> Run Migrations
+                        </button>
+                        <button class="btn btn-warning" onclick="checkMigrationStatus()">
+                            <i class="fas fa-info-circle"></i> Check Status
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="action-card danger">
+                    <h3>Reset Database</h3>
+                    <p>⚠️ This will delete all data and recreate tables</p>
+                    <button class="btn btn-danger" onclick="confirmResetDatabase()">
+                        <i class="fas fa-exclamation-triangle"></i> Reset Database
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment Management -->
+        <section id="deployment" class="admin-section">
+            <h2>Deployment Management</h2>
+            
+            <div class="deployment-status">
+                <h3>Current Deployment Status</h3>
+                <div class="status-cards">
+                    <div class="status-card">
+                        <h4>GitHub Pages</h4>
+                        <div class="status-indicator" id="githubStatus">
+                            <i class="fas fa-circle"></i> Active
+                        </div>
+                        <button class="btn btn-small btn-primary" onclick="deployToGitHub()">
+                            Deploy
+                        </button>
+                    </div>
+                    
+                    <div class="status-card">
+                        <h4>Backend API</h4>
+                        <div class="status-indicator" id="backendStatus">
+                            <i class="fas fa-circle"></i> Running
+                        </div>
+                        <button class="btn btn-small btn-secondary" onclick="checkBackendHealth()">
+                            Check Health
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="deployment-actions">
+                <h3>Deployment Actions</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="deployFrontend()">
+                        <i class="fas fa-upload"></i> Deploy Frontend
+                    </button>
+                    <button class="btn btn-success" onclick="deployFullStack()">
+                        <i class="fas fa-rocket"></i> Deploy Full Stack
+                    </button>
+                    <button class="btn btn-secondary" onclick="rollbackDeployment()">
+                        <i class="fas fa-undo"></i> Rollback
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="addAccountModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Trading Account</h3>
+                <span class="close" onclick="closeModal('addAccountModal')">&times;</span>
+            </div>
+            <form id="addAccountForm">
+                <div class="form-group">
+                    <label for="accountName">Account Name</label>
+                    <input type="text" id="accountName" required>
+                </div>
+                <div class="form-group">
+                    <label for="accountType">Account Type</label>
+                    <select id="accountType">
+                        <option value="DEMO">Demo</option>
+                        <option value="LIVE">Live</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="broker">Broker</label>
+                    <input type="text" id="broker">
+                </div>
+                <div class="form-group">
+                    <label for="startingBalance">Starting Balance</label>
+                    <input type="number" id="startingBalance" value="100000">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addAccountModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
