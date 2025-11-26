@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import Trade, Video, create_tables, get_db
+from models import Trade, Video, TradingAccount, TradingStrategy, TradeTag, TradeImage
+from database import db_config, get_db
+from api_routes import register_enhanced_routes
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -11,7 +13,10 @@ app = Flask(__name__)
 CORS(app)
 
 # Create database tables
-create_tables()
+db_config.create_tables()
+
+# Register enhanced API routes
+register_enhanced_routes(app)
 
 def calculate_pnl(trade):
     """Calculate P&L for a trade"""
