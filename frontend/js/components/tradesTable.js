@@ -85,4 +85,4 @@ function getConfluenceClass(confluence) {
     if (confluence >= 70) return 'high';
     if (confluence >= 40) return 'medium';
     return 'low';
-}
+} 
