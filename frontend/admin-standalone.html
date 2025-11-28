@@ -213,13 +213,62 @@
     </div>
 
     <script>
-        // Mock admin functionality for standalone mode
+        const API_URL = window.location.origin;
+
+        // Load real data from backend
+        async function loadRealData() {
+            try {
+                // Try to fetch real data
+                const response = await fetch(`${API_URL}/api/trades/stats/account`);
+                if (response.ok) {
+                    const data = await response.json();
+                    // Hide standalone notice if backend is running
+                    document.querySelector('.standalone-notice').style.display = 'none';
+                    // Update overview with real data
+                    updateOverview(data);
+                }
+            } catch (error) {
+                console.log('Backend not running, using demo mode');
+            }
+        }
+
+        function updateOverview(data) {
+            // Update overview section with real data
+            const overviewSection = document.getElementById('overview');
+            if (overviewSection) {
+                overviewSection.innerHTML = `
+                    <h2>Dashboard Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>${data.total_trades}</h3>
+                            <p>Total Trades</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>$${data.total_pnl.toFixed(2)}</h3>
+                            <p>Total P&L</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>${data.winning_trades}</h3>
+                            <p>Winning Trades</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>${data.open_trades}</h3>
+                            <p>Open Trades</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         function showMockMessage(message) {
             alert('Demo Mode: ' + message);
         }
 
         // Navigation functionality
         document.addEventListener('DOMContentLoaded', () => {
+            // Load real data on page load
+            loadRealData();
+
             const navButtons = document.querySelectorAll('.nav-btn');
             const sections = document.querySelectorAll('.admin-section');
 

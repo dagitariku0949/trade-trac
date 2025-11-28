@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Dashboard - Admin Panel</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>🛠️ Admin Panel</h1>
+                    <p>Manage your trading dashboard</p>
+                </div>
+                <button class="btn btn-secondary" onclick="window.location.href='index.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </div>
+        </header>
+
+        <!-- Admin Navigation -->
+        <nav class="admin-nav">
+            <button class="nav-btn active" data-section="overview">
+                <i class="fas fa-tachometer-alt"></i> Overview
+            </button>
+            <button class="nav-btn" data-section="trades">
+                <i class="fas fa-chart-line"></i> Trades
+            </button>
+            <button class="nav-btn" data-section="accounts">
+                <i class="fas fa-wallet"></i> Accounts
+            </button>
+            <button class="nav-btn" data-section="database">
+                <i class="fas fa-database"></i> Database
+            </button>
+        </nav>
+
+        <!-- Overview Section -->
+        <section id="overview" class="admin-section active">
+            <h2>Dashboard Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-info">
+                        <h3 id="total-trades">Loading...</h3>
+                        <p>Total Trades</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-info">
+                        <h3 id="total-pnl">Loading...</h3>
+                        <p>Total P&L</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-percentage"></i></div>
+                    <div class="stat-info">
+                        <h3 id="win-rate">Loading...</h3>
+                        <p>Win Rate</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
+                    <div class="stat-info">
+                        <h3 id="open-trades">Loading...</h3>
+                        <p>Open Trades</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trades Section -->
+        <section id="trades" class="admin-section">
+            <div class="section-header">
+                <h2>All Trades</h2>
+                <button class="btn btn-danger" onclick="deleteAllTrades()">
+                    <i class="fas fa-trash"></i> Delete All Trades
+                </button>
+            </div>
+            <div id="trades-list">
+                <p>Loading trades...</p>
+            </div>
+        </section>
+
+        <!-- Accounts Section -->
+        <section id="accounts" class="admin-section">
+            <div class="section-header">
+                <h2>Trading Accounts</h2>
+                <button class="btn btn-primary" onclick="showAddAccountForm()">
+                    <i class="fas fa-plus"></i> Add Account
+                </button>
+            </div>
+            <div id="accounts-list">
+                <p>Accounts management coming soon...</p>
+            </div>
+        </section>
+
+        <!-- Database Section -->
+        <section id="database" class="admin-section">
+            <h2>Database Management</h2>
+            <div class="admin-actions">
+                <button class="btn btn-secondary" onclick="exportData()">
+                    <i class="fas fa-download"></i> Export Data
+                </button>
+                <button class="btn btn-warning" onclick="clearDatabase()">
+                    <i class="fas fa-broom"></i> Clear Database
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_URL = window.location.origin;
+
+        // Load overview stats
+        async function loadOverview() {
+            try {
+                const [accountRes, metricsRes] = await Promise.all([
+                    fetch(`${API_URL}/api/trades/stats/account`),
+                    fetch(`${API_URL}/api/trades/stats/metrics`)
+                ]);
+
+                const accountData = await accountRes.json();
+                const metricsData = await metricsRes.json();
+
+                document.getElementById('total-trades').textContent = accountData.total_trades;
+                document.getElementById('total-pnl').textContent = `$${accountData.total_pnl.toFixed(2)}`;
+                document.getElementById('win-rate').textContent = `${metricsData.win_rate}%`;
+                document.getElementById('open-trades').textContent = accountData.open_trades;
+            } catch (error) {
+                console.error('Error loading overview:', error);
+                alert('Failed to load overview data. Make sure backend is running.');
+            }
+        }
+
+        // Load all trades
+        async function loadTrades() {
+            try {
+                const response = await fetch(`${API_URL}/api/trades`);
+                const trades = await response.json();
+
+                const tradesList = document.getElementById('trades-list');
+                
+                if (trades.length === 0) {
+                    tradesList.innerHTML = '<p>No trades found.</p>';
+                    return;
+                }
+
+                tradesList.innerHTML = trades.map(trade => `
+                    <div class="admin-item-card">
+                        <div class="item-info">
+                            <h4>${trade.symbol} - ${trade.direction}</h4>
+                            <p>Entry: $${trade.entry_price} | Exit: ${trade.exit_price ? '$' + trade.exit_price : 'Open'}</p>
+                            <p>P&L: <span class="${trade.pnl >= 0 ? 'profit' : 'loss'}">${trade.pnl ? '$' + trade.pnl.toFixed(2) : '$0.00'}</span></p>
+                            <p>Status: ${trade.status}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-small btn-danger" onclick="deleteTrade('${trade.id || trade._id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading trades:', error);
+                document.getElementById('trades-list').innerHTML = '<p>Error loading trades.</p>';
+            }
+        }
+
+        // Delete a single trade
+        async function deleteTrade(tradeId) {
+            if (!confirm('Are you sure you want to delete this trade?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/trades/${tradeId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Trade deleted successfully!');
+                    loadTrades();
+                    loadOverview();
+                } else {
+                    alert('Failed to delete trade.');
+                }
+            } catch (error) {
+                console.error('Error deleting trade:', error);
+                alert('Error deleting trade.');
+            }
+        }
+
+        // Delete all trades
+        async function deleteAllTrades() {
+            if (!confirm('Are you sure you want to delete ALL trades? This cannot be undone!')) return;
+            if (!confirm('Really delete ALL trades? Last chance!')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/trades`);
+                const trades = await response.json();
+
+                for (const trade of trades) {
+                    await fetch(`${API_URL}/api/trades/${trade.id || trade._id}`, {
+                        method: 'DELETE'
+                    });
+                }
+
+                alert('All trades deleted successfully!');
+                loadTrades();
+                loadOverview();
+            } catch (error) {
+                console.error('Error deleting trades:', error);
+                alert('Error deleting trades.');
+            }
+        }
+
+        // Export data
+        async function exportData() {
+            try {
+                const response = await fetch(`${API_URL}/api/trades`);
+                const trades = await response.json();
+
+                const dataStr = JSON.stringify(trades, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `trades-export-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                alert('Data exported successfully!');
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                alert('Error exporting data.');
+            }
+        }
+
+        // Clear database
+        async function clearDatabase() {
+            if (!confirm('This will delete ALL data! Are you absolutely sure?')) return;
+            await deleteAllTrades();
+        }
+
+        // Navigation
+        document.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const sections = document.querySelectorAll('.admin-section');
+
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const sectionId = btn.dataset.section;
+                    
+                    navButtons.forEach(b => b.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    document.getElementById(sectionId).classList.add('active');
+
+                    // Load data for the section
+                    if (sectionId === 'overview') loadOverview();
+                    if (sectionId === 'trades') loadTrades();
+                });
+            });
+
+            // Initial load
+            loadOverview();
+        });
+    </script>
+</body>
+</html>
