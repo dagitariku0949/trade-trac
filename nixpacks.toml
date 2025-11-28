@@ -1,15 +1,10 @@
 [phases.setup]
-nixPkgs = ['python39']
+nixPkgs = ['python311']
 
 [phases.install]
 cmds = [
-    'pip install -r backend/requirements.txt'
-]
-
-[phases.build]
-cmds = [
-    'python setup_database.py'
+    'pip install -r requirements.txt'
 ]
 
 [start]
-cmd = 'cd backend && python app.py'
+cmd = 'gunicorn --bind 0.0.0.0:$PORT --workers 2 --chdir backend app:app'

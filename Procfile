@@ -1,2 +1,1 @@
-web: cd backend && python app.py
-release: python setup_database.py
+web: gunicorn --bind 0.0.0.0:$PORT --workers 2 --chdir backend app:app
