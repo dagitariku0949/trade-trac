@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, send_file
+from flask import Flask, request, jsonify, send_from_directory, send_file, session
 from flask_cors import CORS
 from models import Trade, Video, TradingAccount, TradingStrategy, TradeTag, TradeImage
 from database import db_config, get_db
@@ -7,13 +7,27 @@ from datetime import datetime
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import hashlib
 
 load_dotenv()
 
 # Configure Flask to serve frontend files
 frontend_dir = Path(__file__).parent.parent / 'frontend'
 app = Flask(__name__, static_folder=str(frontend_dir), static_url_path='')
-CORS(app)
+app.secret_key = 'trading-dashboard-secret-key-2024'
+CORS(app, supports_credentials=True)
+
+# Demo user credentials
+DEMO_USERS = {
+    'dagitariku095@gmail.com': {
+        'password': 'trading123',
+        'name': 'Dagim Tariku'
+    },
+    'admin': {
+        'password': 'trading123', 
+        'name': 'Admin User'
+    }
+}
 
 # Create database tables
 db_config.create_tables()
@@ -57,6 +71,51 @@ def calculate_confluence(weekly, daily, h4, h1, lower):
     """Calculate total confluence from individual timeframes"""
     return round((weekly + daily + h4 + h1 + lower) / 5, 1)
 
+# Authentication Routes
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email', '').lower()
+    password = data.get('password', '')
+    
+    # Check credentials
+    if email in DEMO_USERS and DEMO_USERS[email]['password'] == password:
+        session['authenticated'] = True
+        session['user_email'] = email
+        session['user_name'] = DEMO_USERS[email]['name']
+        
+        return jsonify({
+            'success': True,
+            'message': 'Login successful',
+            'user': {
+                'email': email,
+                'name': DEMO_USERS[email]['name']
+            }
+        })
+    else:
+        return jsonify({
+            'success': False,
+            'message': 'Invalid email or password'
+        }), 401
+
+@app.route('/api/auth/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({'success': True, 'message': 'Logged out successfully'})
+
+@app.route('/api/auth/check', methods=['GET'])
+def check_auth():
+    if session.get('authenticated'):
+        return jsonify({
+            'authenticated': True,
+            'user': {
+                'email': session.get('user_email'),
+                'name': session.get('user_name')
+            }
+        })
+    else:
+        return jsonify({'authenticated': False}), 401
+
 # Routes
 @app.route('/')
 def home():
@@ -67,7 +126,8 @@ def home():
             'trades': '/api/trades',
             'account_stats': '/api/trades/stats/account',
             'metrics': '/api/trades/stats/metrics',
-            'daily_stats': '/api/trades/stats/daily'
+            'daily_stats': '/api/trades/stats/daily',
+            'auth': '/api/auth/login'
         }
     })
 

@@ -3,159 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Dashboard - Login</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>LEAP Trading Dashboard</title>
     <style>
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        .login-card {
-            background: rgba(255, 255, 255, 0.95);
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a2332;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background: #2a3441;
+            border-radius: 12px;
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
-            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         
-        .login-header {
+        .logo {
+            text-align: center;
             margin-bottom: 30px;
         }
         
-        .login-header h1 {
-            color: #333;
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-radius: 8px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .logo p {
+            color: #8892a0;
+            font-size: 16px;
             margin-bottom: 10px;
         }
         
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .subtitle {
+            color: #8892a0;
+            font-size: 14px;
         }
         
         .form-group {
-            text-align: left;
+            margin-bottom: 20px;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            color: #555;
+            margin-bottom: 8px;
+            color: #8892a0;
+            font-size: 14px;
             font-weight: 500;
         }
         
         .form-group input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
+            padding: 12px 16px;
+            background: #3a4553;
+            border: 1px solid #4a5568;
             border-radius: 8px;
+            color: #ffffff;
             font-size: 16px;
             transition: border-color 0.3s;
         }
         
         .form-group input:focus {
             outline: none;
-            border-color: #00d4ff;
+            border-color: #4CAF50;
+        }
+        
+        .form-group input::placeholder {
+            color: #8892a0;
         }
         
         .login-btn {
-            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            width: 100%;
+            background: #4CAF50;
             color: white;
-            padding: 15px;
+            padding: 14px;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: background-color 0.3s;
+            margin-bottom: 15px;
         }
         
         .login-btn:hover {
-            transform: translateY(-2px);
+            background: #45a049;
+        }
+        
+        .login-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
         }
         
         .error-message {
-            color: #e74c3c;
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(231, 76, 60, 0.1);
-            border-radius: 5px;
+            background: #dc3545;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
             display: none;
         }
         
-        .demo-credentials {
+        .signup-link {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .signup-link a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .security-note {
+            background: rgba(74, 85, 104, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #8892a0;
+        }
+        
+        .security-icon {
+            color: #ffa500;
+        }
+        
+        .demo-info {
             margin-top: 20px;
             padding: 15px;
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(76, 175, 80, 0.1);
             border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .demo-info h4 {
+            color: #4CAF50;
+            margin-bottom: 8px;
             font-size: 14px;
+        }
+        
+        .demo-info p {
+            font-size: 12px;
+            color: #8892a0;
+            margin-bottom: 8px;
+        }
+        
+        .demo-credentials {
+            font-family: monospace;
+            font-size: 12px;
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <h1>🚀 Trading Dashboard</h1>
-                <p>Sign in to access your dashboard</p>
+        <div class="logo">
+            <div class="logo-icon">🚀</div>
+            <h1>LEAP</h1>
+            <p>Trading Dashboard</p>
+            <div class="subtitle">Sign in to your account</div>
+        </div>
+        
+        <form id="loginForm">
+            <div class="error-message" id="errorMessage">
+                Authentication failed
             </div>
             
-            <form class="login-form" id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                
-                <button type="submit" class="login-btn">Sign In</button>
-                
-                <div class="error-message" id="errorMessage">
-                    Invalid username or password
-                </div>
-            </form>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" value="dagitariku095@gmail.com" required>
+            </div>
             
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
+            
+            <div class="signup-link">
+                <a href="#">Don't have an account? Sign up</a>
+            </div>
+            
+            <div class="security-note">
+                <span class="security-icon">🔒</span>
+                <span>Secure access to your trading dashboard<br>Your data is protected and encrypted</span>
+            </div>
+        </form>
+        
+        <div class="demo-info">
+            <h4>Demo Access</h4>
+            <p>Use these credentials to access the demo:</p>
             <div class="demo-credentials">
-                <strong>Demo Credentials:</strong><br>
-                Username: <code>admin</code><br>
-                Password: <code>trading123</code>
+                Email: dagitariku095@gmail.com<br>
+                Password: trading123
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
             
-            // Simple authentication (you can make this more secure)
-            if (username === 'admin' && password === 'trading123') {
-                // Store authentication token
-                localStorage.setItem('tradingDashboardAuth', 'authenticated');
-                localStorage.setItem('tradingDashboardUser', username);
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+            errorMessage.style.display = 'none';
+            
+            try {
+                // Try backend authentication first
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'include'
+                });
                 
-                // Redirect to dashboard
-                window.location.href = 'index.html';
-            } else {
-                // Show error message
-                errorMessage.style.display = 'block';
+                const data = await response.json();
                 
-                // Hide error after 3 seconds
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                }, 3000);
+                if (data.success) {
+                    // Store authentication
+                    localStorage.setItem('tradingDashboardAuth', 'authenticated');
+                    localStorage.setItem('tradingDashboardUser', data.user.name);
+                    localStorage.setItem('tradingDashboardEmail', data.user.email);
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'index.html';
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                // Fallback to client-side authentication
+                if ((email === 'dagitariku095@gmail.com' || email === 'admin') && password === 'trading123') {
+                    localStorage.setItem('tradingDashboardAuth', 'authenticated');
+                    localStorage.setItem('tradingDashboardUser', 'Dagim Tariku');
+                    localStorage.setItem('tradingDashboardEmail', email);
+                    window.location.href = 'index.html';
+                } else {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Authentication failed';
+                }
+            } finally {
+                // Reset button state
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
             }
         });
         
