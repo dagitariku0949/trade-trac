@@ -12,7 +12,7 @@
       "dest": "api/index.py"
     },
     {
-      "src": "/(.*\\.(css|js|html|png|jpg|jpeg|gif|ico|svg))",
+      "src": "/frontend/(.*\\.(css|js|html|png|jpg|jpeg|gif|ico|svg))",
       "dest": "/frontend/$1"
     },
     {
@@ -21,7 +21,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "dest": "/index.html"
     }
   ],
   "env": {
